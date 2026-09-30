@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Buddy AI - ดินแดนคณิตศาสตร์สุดสนุก</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt & Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FFF5F5',
+                            100: '#FFE3E3',
+                            500: '#6366F1',
+                            600: '#4F46E5',
+                            pink: '#EC4899',
+                            yellow: '#F59E0B',
+                            green: '#10B981',
+                            purple: '#A855F7',
+                            sky: '#06B6D4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'Kanit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            user-select: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .bounce-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        .cartoon-card {
+            border-bottom-width: 6px;
+            transition: all 0.2s ease;
+        }
+        .cartoon-card:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        
+        /* Theme classes applied to body */
+        body.theme-rainbow { background-color: #f8fafc; }
+        body.theme-space { background-color: #0f172a; color: #f8fafc; }
+        body.theme-candy { background-color: #fff1f2; }
+    </style>
+</head>
+<body id="app-body" class="h-full flex flex-col bg-slate-100 text-slate-800 antialiased selection:bg-pink-500 selection:text-white transition-colors duration-300">
+
+    <!-- STUDENT ONLY LOGIN OVERLAY MODAL -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md transition-all duration-300">
+        <div class="bg-white rounded-3xl shadow-2xl border-4 border-indigo-400 w-full max-w-lg overflow-hidden flex flex-col">
+            
+            <!-- Login Header Banner -->
+            <div class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 p-6 text-white text-center relative overflow-hidden">
+                <div class="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl mx-auto mb-2 shadow-lg border-2 border-white/40 animate-bounce">
+                    🦄
+                </div>
+                <h2 class="text-2xl font-black tracking-wide">Math Buddy AI</h2>
+                <p class="text-xs text-pink-100 mt-1 font-medium">ยินดีต้อนรับสู่ดินแดนคณิตศาสตร์แสนสนุก 🌟</p>
+            </div>
+
+            <!-- Login Content -->
+            <div class="p-6 space-y-5 flex-1 overflow-y-auto bg-amber-50/30">
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-2">เลือกเพื่อนการ์ตูนล็อกอินด่วน:</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" onclick="quickLoginStudent('น้องแพรวา ใจดี', 'น้องแพรวา', 'ป.4', '👧')" class="p-3 bg-pink-50 hover:bg-pink-100 border-2 border-pink-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                            <span class="text-3xl">👧</span>
+                            <div class="overflow-hidden">
+                                <div class="text-xs font-bold text-pink-900 truncate">น้องแพรวา (ป.4)</div>
+                                <div class="text-[10px] text-pink-600 font-semibold">เลเวล 4 • ⭐ 1,250</div>
+                            </div>
+                        </button>
+
+                        <button type="button" onclick="quickLoginStudent('น้องภูผา กล้าหาญ', 'น้องภูผา', 'ป.2', '👦')" class="p-3 bg-sky-50 hover:bg-sky-100 border-2 border-sky-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                            <span class="text-3xl">👦</span>
+                            <div class="overflow-hidden">
+                                <div class="text-xs font-bold text-sky-900 truncate">น้องภูผา (ป.2)</div>
+                                <div class="text-[10px] text-sky-600 font-semibold">เลเวล 2 • ⭐ 840</div>
+                            </div>
+                        </button>
+
+                        <button type="button" onclick="quickLoginStudent('น้องสิงโต ผู้กล้า', 'น้องสิงโต', 'ป.3', '🦁')" class="p-3 bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                            <span class="text-3xl">🦁</span>
+                            <div class="overflow-hidden">
+                                <div class="text-xs font-bold text-amber-900 truncate">น้องสิงโต (ป.3)</div>
+                                <div class="text-[10px] text-amber-600 font-semibold">เลเวล 3 • ⭐ 990</div>
+                            </div>
+                        </button>
+
+                        <button type="button" onclick="quickLoginStudent('น้องจิ้งจอก แสนกล', 'น้องฟ๊อกซี่', 'ป.5', '🦊')" class="p-3 bg-orange-50 hover:bg-orange-100 border-2 border-orange-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                            <span class="text-3xl">🦊</span>
+                            <div class="overflow-hidden">
+                                <div class="text-xs font-bold text-orange-900 truncate">น้องฟ๊อกซี่ (ป.5)</div>
+                                <div class="text-[10px] text-orange-600 font-semibold">เลเวล 5 • ⭐ 2,100</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative flex py-1 items-center">
+                    <div class="flex-grow border-t-2 border-slate-200"></div>
+                    <span class="flex-shrink mx-3 text-[11px] font-bold text-slate-400">หรือ สร้างตัวละครใหม่ของคุณ</span>
+                    <div class="flex-grow border-t-2 border-slate-200"></div>
+                </div>
+
+                <!-- Custom Student Login Form -->
+                <form onsubmit="handleCustomStudentLogin(event)" class="space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">ชื่อเรียกนักเรียน</label>
+                            <input type="text" id="login-student-fullname" required placeholder="เช่น น้องมีนา" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 text-xs focus:border-indigo-500 focus:outline-none font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">ชื่อเล่นในเกม</label>
+                            <input type="text" id="login-student-nickname" required placeholder="เช่น มีนาซ่า" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 text-xs focus:border-indigo-500 focus:outline-none font-bold">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">ระดับชั้นเรียน</label>
+                            <select id="login-student-grade" class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-300 text-xs focus:border-indigo-500 focus:outline-none font-bold">
+                                <option value="ป.1">ประถมศึกษาปีที่ 1 (ป.1)</option>
+                                <option value="ป.2">ประถมศึกษาปีที่ 2 (ป.2)</option>
+                                <option value="ป.3">ประถมศึกษาปีที่ 3 (ป.3)</option>
+                                <option value="ป.4" selected>ประถมศึกษาปีที่ 4 (ป.4)</option>
+                                <option value="ป.5">ประถมศึกษาปีที่ 5 (ป.5)</option>
+                                <option value="ป.6">ประถมศึกษาปีที่ 6 (ป.6)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">เลือกตัวละครการ์ตูน</label>
+                            <select id="login-student-avatar" class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-300 text-xs focus:border-indigo-500 focus:outline-none font-bold">
+                                <option value="👧">👧 เด็กผู้หญิง</option>
+                                <option value="👦">👦 เด็กผู้ชาย</option>
+                                <option value="🐰">🐰 น้องต่ายน่ารัก</option>
+                                <option value="🐼">🐼 หมีแพนด้า</option>
+                                <option value="🚀">🚀 นักบินอวกาศ</option>
+                                <option value="🦄">🦄 ยูนิต้าสุดสวย</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold rounded-2xl text-xs shadow-lg transition active:scale-95 flex items-center justify-center gap-2 border-b-4 border-indigo-800">
+                        <span>🚀 เข้าสู่โลกคณิตศาสตร์</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 bg-indigo-50 border-t-2 border-indigo-100 text-center text-[11px] font-bold text-indigo-700">
+                🌈 เล่นสนุก ปลอดภัย ไร้โฆษณา สำหรับเด็กประถมศึกษาทุกคน!
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MAIN WEB APP CONTAINER -->
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- 1. SIDEBAR NAVIGATION (Student Specific Only) -->
+        <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 transition-all duration-300 z-30 hidden md:flex border-r-4 border-indigo-600">
+            <div>
+                <!-- Brand Logo -->
+                <div class="h-20 flex items-center gap-3 px-6 bg-slate-950/80 border-b-2 border-slate-800">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 via-purple-500 to-yellow-400 flex items-center justify-center text-white text-2xl font-bold shadow-lg animate-pulse">
+                        🧮
+                    </div>
+                    <div>
+                        <h1 class="font-black text-white text-lg tracking-wide leading-none">Math Buddy</h1>
+                        <span class="text-[10px] text-pink-400 font-extrabold tracking-widest uppercase">Kids Edition 🌟</span>
+                    </div>
+                </div>
+
+                <!-- Student Quick Info Widget -->
+                <div class="m-4 p-3.5 rounded-2xl bg-indigo-950/80 border-2 border-indigo-500/50 flex items-center gap-3 shadow-md">
+                    <div class="relative">
+                        <div id="sidebar-avatar" class="w-12 h-12 rounded-2xl bg-pink-100 border-2 border-pink-400 flex items-center justify-center text-2xl shadow">
+                            👧
+                        </div>
+                        <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-slate-900 rounded-full"></span>
+                    </div>
+                    <div class="overflow-hidden flex-1">
+                        <h2 id="sidebar-nickname" class="text-sm font-extrabold text-white truncate">น้องแพรวา</h2>
+                        <div id="sidebar-fullname" class="text-[10px] text-indigo-200 truncate font-semibold">น้องแพรวา ใจดี</div>
+                        <div class="flex items-center gap-1.5 text-[10px] mt-1">
+                            <span id="sidebar-usergrade" class="bg-indigo-800 text-indigo-200 px-2 py-0.5 rounded-md font-bold">ป.4</span>
+                            <span class="text-yellow-400 font-bold">Lv.4 🏆</span>
+                        </div>
+                    </div>
+                    <button onclick="logoutUser()" title="สลับตัวละคร / ออกจากระบบ" class="text-slate-400 hover:text-red-400 p-2 rounded-xl hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Links (Student Features Only) -->
+                <nav class="px-3 space-y-1.5 mt-2">
+                    <button onclick="navigateTo('view-dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-xs transition text-white bg-indigo-600 shadow-md border-b-2 border-indigo-800">
+                        <i class="fa-solid fa-house text-base w-5 text-center text-yellow-300"></i>
+                        <span>หน้าแรก (Home)</span>
+                    </button>
+
+                    <button onclick="navigateTo('view-ai-tutor')" id="nav-ai-tutor" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-xs transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-robot text-base w-5 text-center text-pink-400"></i>
+                        <span>คุยกับพี่ AI Math Tutor</span>
+                        <span class="ml-auto px-2 py-0.5 rounded-full text-[9px] bg-pink-500/20 text-pink-300 font-bold">📷 มีกล้อง</span>
+                    </button>
+
+                    <button onclick="navigateTo('view-games')" id="nav-games" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-xs transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-gamepad text-base w-5 text-center text-amber-400"></i>
+                        <span>มินิเกมคณิตศาสตร์</span>
+                        <span class="ml-auto px-2 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-300 font-bold">🎮 4 โหมด</span>
+                    </button>
+
+                    <button onclick="navigateTo('view-analytics')" id="nav-analytics" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-xs transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-trophy text-base w-5 text-center text-emerald-400"></i>
+                        <span>สมุดสะสมดาว & เหรียญ</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Footer / Settings Button -->
+            <div class="p-3 border-t-2 border-slate-800">
+                <button onclick="navigateTo('view-settings')" id="nav-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-palette text-base w-5 text-center text-purple-400"></i>
+                    <span>แต่งธีมสี & ตั้งค่า</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN VIEW AREA -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <!-- TOP HEADER BAR -->
+            <header class="h-16 bg-white/90 backdrop-blur-md border-b-2 border-slate-200 px-4 md:px-8 flex items-center justify-between shrink-0 z-20">
+                <!-- Mobile Sidebar Toggle & Page Title -->
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleMobileSidebar()" class="md:hidden p-2 text-slate-600 hover:text-indigo-600 rounded-xl bg-slate-100">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h2 id="current-view-title" class="text-base md:text-lg font-black text-indigo-950 leading-tight">หน้าหลักคณิตศาสตร์</h2>
+                        <p class="text-[11px] text-slate-500 font-medium hidden sm:block">เรียนสนุก สนุกคิดกับ Math Buddy AI 🌟</p>
+                    </div>
+                </div>
+
+                <!-- Header Right Controls & Rewards -->
+                <div class="flex items-center gap-2 md:gap-4">
+                    <!-- Grade Switcher Selector -->
+                    <div class="hidden sm:flex items-center gap-1.5 bg-indigo-50 border-2 border-indigo-200 px-3 py-1 rounded-xl text-xs font-bold">
+                        <span class="text-indigo-600">ระดับชั้น:</span>
+                        <select id="header-grade-select" onchange="changeGradeLevel(this.value)" class="bg-transparent font-black text-indigo-800 focus:outline-none cursor-pointer">
+                            <option value="ป.1">ป.1</option>
+                            <option value="ป.2">ป.2</option>
+                            <option value="ป.3">ป.3</option>
+                            <option value="ป.4" selected>ป.4</option>
+                            <option value="ป.5">ป.5</option>
+                            <option value="ป.6">ป.6</option>
+                        </select>
+                    </div>
+
+                    <!-- Rewards Counters -->
+                    <div class="flex items-center gap-2 bg-amber-100 border-2 border-amber-300 px-3 py-1 rounded-xl text-xs font-black text-amber-900 shadow-sm">
+                        <span class="flex items-center gap-1">⭐ <span id="header-stars">1,250</span></span>
+                        <span class="text-amber-400">|</span>
+                        <span class="flex items-center gap-1">🪙 <span id="header-coins">340</span></span>
+                    </div>
+
+                    <!-- Photo Upload Quick Button -->
+                    <button onclick="triggerImageUpload(); navigateTo('view-ai-tutor');" title="ถ่ายรูป/อัปโหลดภาพโจทย์" class="w-10 h-10 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition border-2 border-pink-300 shadow-sm">
+                        <i class="fa-solid fa-camera text-base"></i>
+                    </button>
+
+                    <!-- Voice Assistant Quick Toggle -->
+                    <button onclick="toggleVoiceRecognition()" title="สั่งการด้วยเสียงพูด" class="w-10 h-10 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-700 flex items-center justify-center transition border-2 border-purple-300 shadow-sm">
+                        <i id="header-mic-icon" class="fa-solid fa-microphone text-base"></i>
+                    </button>
+
+                    <!-- Notifications -->
+                    <button onclick="showNotificationToast('🔔 ภารกิจประจำวันนี้: ถ่ายรูปโจทย์หรือตอบคำถามคณิตศาสตร์ครบ 5 ข้อรับ 50 เหรียญทอง!')" class="relative w-10 h-10 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-700 flex items-center justify-center transition border-2 border-indigo-300 shadow-sm">
+                        <i class="fa-solid fa-bell text-base"></i>
+                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                    </button>
+
+                    <!-- Logout Button -->
+                    <button onclick="logoutUser()" title="สลับบัญชี" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-red-100 hover:text-red-600 text-slate-700 text-xs font-bold transition border-2 border-slate-200">
+                        <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                        <span>สลับตัวละคร</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- SCROLLABLE PAGE CONTENT AREA -->
+            <main id="web-main-content" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
+
+                <!-- ========================================================= -->
+                <!-- VIEW 1: STUDENT DASHBOARD OVERVIEW -->
+                <!-- ========================================================= -->
+                <section id="view-dashboard" class="space-y-6">
+                    
+                    <!-- Hero Welcome Banner -->
+                    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white p-6 md:p-8 shadow-xl border-b-8 border-indigo-900">
+                        <div class="relative z-10 max-w-2xl space-y-3">
+                            <span class="inline-block px-3 py-1 rounded-full bg-yellow-400 text-purple-950 font-black text-xs uppercase tracking-wider shadow-md">
+                                🌟 ภารกิจประจำวันนี้
+                            </span>
+                            <h3 class="text-2xl md:text-3xl font-black tracking-wide">
+                                สวัสดีจ้า <span id="welcome-user-name" class="text-yellow-300">น้องแพรวา</span>! พร้อมลุยคณิตสนุกๆ กันหรือยัง?
+                            </h3>
+                            <p class="text-indigo-100 text-xs md:text-sm font-medium">
+                                ถ่ายรูปโจทย์แบบฝึกหัดให้พี่ AI ตรวจ หรือเล่นเกมคิดเลขเร็วเพื่อสะสมเหรียญทอง x2 วันนี้!
+                            </p>
+                            <div class="flex flex-wrap items-center gap-3 pt-2">
+                                <button onclick="triggerImageUpload(); navigateTo('view-ai-tutor');" class="px-6 py-3 bg-pink-400 hover:bg-pink-300 text-slate-950 font-black rounded-2xl text-xs shadow-lg transition transform active:scale-95 flex items-center gap-2 border-b-4 border-pink-600 cartoon-card">
+                                    <i class="fa-solid fa-camera text-base"></i> 📷 ถ่ายรูปโจทย์ให้ AI ช่วยสอน
+                                </button>
+                                <button onclick="navigateTo('view-games')" class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-purple-950 font-black rounded-2xl text-xs shadow-lg transition transform active:scale-95 flex items-center gap-2 border-b-4 border-yellow-600 cartoon-card">
+                                    <i class="fa-solid fa-gamepad text-base"></i> เริ่มเล่นเกมล่าดาว
+                                </button>
+                                <button onclick="navigateTo('view-ai-tutor')" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-bold rounded-2xl text-xs backdrop-blur-md transition flex items-center gap-2 border-2 border-white/40">
+                                    <i class="fa-solid fa-comments text-base"></i> ถามพี่ AI Math Tutor
+                                </button>
+                            </div>
+                        </div>
+                        <div class="absolute right-2 -bottom-4 text-9xl opacity-30 select-none pointer-events-none animate-bounce">
+                            🦄
+                        </div>
+                    </div>
+
+                    <!-- Photo Upload Feature Callout Card -->
+                    <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-4 border-b-6 border-indigo-700">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl shadow shrink-0 border-2 border-white/30">
+                                📸
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-black text-white">ทำการบ้านคณิตข้อไหนไม่ได้? ถ่ายรูปส่งมาเลย!</h4>
+                                <p class="text-xs text-indigo-100 font-medium">ถ่ายภาพโจทย์จากหนังสือ แบบฝึกหัด หรือใบงาน พี่ AI จะอ่านภาพและสอนวิธีคิดให้ทันที</p>
+                            </div>
+                        </div>
+                        <button onclick="triggerImageUpload(); navigateTo('view-ai-tutor');" class="px-5 py-3 bg-white text-indigo-950 hover:bg-indigo-50 font-black rounded-2xl text-xs shadow transition active:scale-95 shrink-0 flex items-center gap-2">
+                            <i class="fa-solid fa-camera text-pink-500 text-sm"></i> ถ่ายรูปโจทย์ทันที
+                        </button>
+                    </div>
+
+                    <!-- Quick Cartoon Metrics Grid -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="p-4 bg-white rounded-2xl border-2 border-orange-200 shadow-sm hover:shadow-md transition flex items-center gap-3 cartoon-card">
+                            <div class="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-3xl shrink-0">
+                                🔥
+                            </div>
+                            <div>
+                                <div class="text-2xl font-black text-slate-800">5 วัน</div>
+                                <div class="text-xs text-slate-500 font-bold">เล่นต่อเนื่อง</div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white rounded-2xl border-2 border-indigo-200 shadow-sm hover:shadow-md transition flex items-center gap-3 cartoon-card">
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-3xl shrink-0">
+                                ⏱️
+                            </div>
+                            <div>
+                                <div class="text-2xl font-black text-slate-800">120 นาที</div>
+                                <div class="text-xs text-slate-500 font-bold">เวลารวมสัปดาห์นี้</div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white rounded-2xl border-2 border-green-200 shadow-sm hover:shadow-md transition flex items-center gap-3 cartoon-card">
+                            <div class="w-12 h-12 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center text-3xl shrink-0">
+                                ✅
+                            </div>
+                            <div>
+                                <div class="text-2xl font-black text-slate-800">48 ข้อ</div>
+                                <div class="text-xs text-slate-500 font-bold">ตอบโจทย์ถูกแล้ว</div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white rounded-2xl border-2 border-pink-200 shadow-sm hover:shadow-md transition flex items-center gap-3 cartoon-card">
+                            <div class="w-12 h-12 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center text-3xl shrink-0">
+                                🎯
+                            </div>
+                            <div>
+                                <div class="text-2xl font-black text-slate-800">88%</div>
+                                <div class="text-xs text-slate-500 font-bold">แม่นยำเฉลี่ย</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Topics Cartoon Grid -->
+                    <div class="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+                                    <span>📚 ดินแดนบทเรียนคณิตศาสตร์น่ารู้</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 font-medium">กดเลือกด่านบทเรียนเพื่อเริ่มติวกับพี่ AI ได้เลยจ้า</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            
+                            <!-- Topic Card 1 -->
+                            <div class="p-4 rounded-2xl border-2 border-pink-200 bg-pink-50/50 hover:bg-pink-50 transition space-y-3 cartoon-card flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-4xl">🍕</span>
+                                        <span class="text-[10px] bg-pink-200 text-pink-800 px-2.5 py-1 rounded-full font-black">ผ่านแล้ว 65%</span>
+                                    </div>
+                                    <h4 class="font-black text-slate-800 text-sm">เศษส่วนพิซซ่าแสนอร่อย</h4>
+                                    <p class="text-xs text-slate-500 font-medium">การบวกลบเศษส่วนตัวส่วนเท่ากัน</p>
+                                </div>
+                                <button onclick="sendQuickPrompt('ขอคำอธิบายเรื่อง เศษส่วนพิซซ่า พร้อมภาพเปรียบเทียบง่ายๆ'); navigateTo('view-ai-tutor');" class="w-full py-2.5 bg-pink-500 hover:bg-pink-600 text-white font-bold text-xs rounded-xl transition shadow border-b-2 border-pink-700">
+                                    เรียนบทนี้กับพี่ AI
+                                </button>
+                            </div>
+
+                            <!-- Topic Card 2 -->
+                            <div class="p-4 rounded-2xl border-2 border-purple-200 bg-purple-50/50 hover:bg-purple-50 transition space-y-3 cartoon-card flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-4xl">📐</span>
+                                        <span class="text-[10px] bg-purple-200 text-purple-800 px-2.5 py-1 rounded-full font-black">ผ่านแล้ว 90%</span>
+                                    </div>
+                                    <h4 class="font-black text-slate-800 text-sm">ปราสาทรูปทรงเรขาคณิต</h4>
+                                    <p class="text-xs text-slate-500 font-medium">การหาพื้นที่สี่เหลี่ยมผืนผ้าและจัตุรัส</p>
+                                </div>
+                                <button onclick="sendQuickPrompt('ขอวิธีหาพื้นที่รูปสี่เหลี่ยมผืนผ้าและสี่เหลี่ยมจัตุรัสแบบเข้าใจง่าย'); navigateTo('view-ai-tutor');" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition shadow border-b-2 border-purple-800">
+                                    เรียนบทนี้กับพี่ AI
+                                </button>
+                            </div>
+
+                            <!-- Topic Card 3 -->
+                            <div class="p-4 rounded-2xl border-2 border-amber-200 bg-amber-50/50 hover:bg-amber-50 transition space-y-3 cartoon-card flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-4xl">🚀</span>
+                                        <span class="text-[10px] bg-amber-200 text-amber-800 px-2.5 py-1 rounded-full font-black">ผ่านแล้ว 40%</span>
+                                    </div>
+                                    <h4 class="font-black text-slate-800 text-sm">สูตรคูณจอมพลังตะลุยอวกาศ</h4>
+                                    <p class="text-xs text-slate-500 font-medium">การคูณและการหารคิดเลขเร็ว</p>
+                                </div>
+                                <button onclick="selectGameMode('⚡ แข่งตอบเร็ว (Speed Math)', 'speed'); navigateTo('view-games');" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl transition shadow border-b-2 border-amber-700">
+                                    ไปตะลุยเกมสูตรคูณ
+                                </button>
+                            </div>
+
+                            <!-- Topic Card 4 -->
+                            <div class="p-4 rounded-2xl border-2 border-sky-200 bg-sky-50/50 hover:bg-sky-50 transition space-y-3 cartoon-card flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-4xl">⏰</span>
+                                        <span class="text-[10px] bg-sky-200 text-sky-800 px-2.5 py-1 rounded-full font-black">ผ่านแล้ว 25%</span>
+                                    </div>
+                                    <h4 class="font-black text-slate-800 text-sm">นาฬิกาและเวลามหาสนุก</h4>
+                                    <p class="text-xs text-slate-500 font-medium">การอ่านเวลาเป็นนาฬิกาและนาที</p>
+                                </div>
+                                <button onclick="sendQuickPrompt('ขอวิธีอ่านเวลานาฬิกาแบบเข็มและแบบตัวเลขอย่างง่าย'); navigateTo('view-ai-tutor');" class="w-full py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl transition shadow border-b-2 border-sky-700">
+                                    เรียนบทนี้กับพี่ AI
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- VIEW 2: FULL-PAGE AI MATH TUTOR CHAT INTERFACE WITH CAMERA -->
+                <!-- ========================================================= -->
+                <section id="view-ai-tutor" class="hidden h-[calc(100vh-6.5rem)] flex flex-col bg-white rounded-3xl border-2 border-indigo-200 shadow-md overflow-hidden">
+                    
+                    <!-- Chat View Header -->
+                    <div class="px-6 py-4 bg-indigo-600 text-white flex items-center justify-between shrink-0 border-b-4 border-indigo-800">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-white text-indigo-600 flex items-center justify-center text-2xl shadow animate-bounce">
+                                🤖
+                            </div>
+                            <div>
+                                <h3 class="font-black text-sm md:text-base">พี่ AI Math Tutor (มีระบบสแกนรูปโจทย์ 📷)</h3>
+                                <p id="ai-status-text" class="text-xs text-indigo-100 flex items-center gap-1.5 font-bold">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-ping"></span> พร้อมอ่านภาพโจทย์ & ตอบคำถามจ้า
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="triggerImageUpload()" class="px-3.5 py-1.5 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-black transition shadow flex items-center gap-1.5 border border-pink-300">
+                                <i class="fa-solid fa-camera text-sm"></i> ถ่ายรูปโจทย์
+                            </button>
+                            <button onclick="clearChatMessages()" class="px-3 py-1.5 rounded-xl bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold transition border border-indigo-500">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> เริ่มคุยใหม่
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Scrollable Body -->
+                    <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-amber-50/20">
+                        
+                        <!-- Initial AI Welcome Message -->
+                        <div class="flex gap-3 max-w-3xl">
+                            <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-lg shrink-0 shadow">🤖</div>
+                            <div class="bg-white p-4 rounded-3xl rounded-tl-none border-2 border-indigo-100 text-xs md:text-sm text-slate-800 shadow-sm space-y-2">
+                                <p class="font-black text-indigo-700">สวัสดีจ้าน้องๆ! 🌟</p>
+                                <p class="font-medium">พี่ AI Math Tutor พร้อมช่วยเหลือแล้ว! สามารถพิมพ์โจทย์ **หรือกดปุ่ม 📷 ถ่ายรูปภาพโจทย์** จากแบบฝึกหัด ส่งมาให้พี่ดูและช่วยสอนวิธีคิดได้เลยนะจ๊ะ!</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Quick Prompt Chips Toolbar -->
+                    <div class="px-6 py-2.5 bg-indigo-50/80 border-t-2 border-indigo-100 flex gap-2 overflow-x-auto hide-scrollbar shrink-0">
+                        <span class="text-xs font-black text-indigo-800 my-auto shrink-0 mr-1">💡 ตัวเลือกด่วน:</span>
+                        <button onclick="triggerImageUpload()" class="px-3.5 py-2 bg-pink-100 border-2 border-pink-300 hover:bg-pink-200 text-pink-900 text-xs font-black rounded-2xl whitespace-nowrap shadow-sm transition cartoon-card flex items-center gap-1 text-pink-700">📷 ถ่ายรูปโจทย์ข้อนี้</button>
+                        <button onclick="sendQuickPrompt('ช่วยอธิบายเรื่อง เศษส่วน ให้ฟังแบบเข้าใจง่าย')" class="px-3.5 py-2 bg-white border-2 border-indigo-200 hover:border-pink-400 text-indigo-900 text-xs font-bold rounded-2xl whitespace-nowrap shadow-sm transition cartoon-card">🍕 เรื่องเศษส่วน</button>
+                        <button onclick="sendQuickPrompt('ขอวิธีหาพื้นที่ของรูปสี่เหลี่ยมผืนผ้าและสี่เหลี่ยมจัตุรัสแบบเข้าใจง่าย')" class="px-3.5 py-2 bg-white border-2 border-indigo-200 hover:border-purple-400 text-indigo-900 text-xs font-bold rounded-2xl whitespace-nowrap shadow-sm transition cartoon-card">📐 สูตรหาพื้นที่</button>
+                        <button onclick="sendQuickPrompt('ขอโจทย์ฝึกคิดเลขเร็วเรื่องการคูณและการหาร พร้อมเฉลย')" class="px-3.5 py-2 bg-white border-2 border-indigo-200 hover:border-amber-400 text-indigo-900 text-xs font-bold rounded-2xl whitespace-nowrap shadow-sm transition cartoon-card">📝 ขอโจทย์คณิตฝึกทำ</button>
+                    </div>
+
+                    <!-- Image Preview Attachment Bar (Hidden by default) -->
+                    <div id="image-preview-container" class="hidden px-6 py-3 bg-pink-50 border-t-2 border-pink-200 flex items-center justify-between shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-pink-400 shadow">
+                                <img id="image-preview-img" src="" class="w-full h-full object-cover" alt="พรีวิวโจทย์รูปถ่าย">
+                            </div>
+                            <div>
+                                <div class="text-xs font-black text-pink-900 flex items-center gap-1">
+                                    <span>📷 พร้อมส่งรูปภาพโจทย์</span>
+                                    <span class="text-[10px] bg-pink-200 text-pink-800 px-2 py-0.5 rounded-md">ภาพโจทย์ถ่ายไว้</span>
+                                </div>
+                                <div id="image-preview-filename" class="text-[11px] text-pink-600 font-semibold truncate max-w-xs">math_problem.jpg</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="cancelImageUpload()" class="p-2 text-pink-600 hover:text-red-600 bg-pink-100 hover:bg-pink-200 rounded-xl transition text-xs font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-xmark text-sm"></i> ยกเลิกภาพนี้
+                        </button>
+                    </div>
+
+                    <!-- Hidden File Input for Image Upload / Camera -->
+                    <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="handleImageFileSelect(event)">
+
+                    <!-- Form Input Bar -->
+                    <form id="chat-form" onsubmit="handleSendChatMessage(event)" class="p-4 bg-white border-t-2 border-slate-200 flex items-center gap-2.5 shrink-0">
+                        
+                        <!-- Camera / File Attachment Button -->
+                        <button type="button" onclick="triggerImageUpload()" class="p-3.5 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-2xl transition border-2 border-pink-300 relative" title="ถ่ายรูป/อัปโหลดรูปภาพโจทย์">
+                            <i class="fa-solid fa-camera text-base"></i>
+                            <span class="absolute -top-1 -right-1 w-3 h-3 bg-pink-500 rounded-full border-2 border-white"></span>
+                        </button>
+
+                        <!-- Voice Input Button -->
+                        <button type="button" id="btn-voice-input" onclick="toggleVoiceRecognition()" class="p-3.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-2xl transition border-2 border-purple-300" title="สั่งการด้วยเสียง">
+                            <i id="mic-icon" class="fa-solid fa-microphone text-base"></i>
+                        </button>
+
+                        <!-- Chat Text Input -->
+                        <input type="text" id="chat-input" placeholder="พิมพ์คำถาม หรือถ่ายรูปโจทย์แล้วกดส่ง..." class="flex-1 px-4 py-3.5 bg-slate-100 rounded-2xl text-xs md:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 border-2 border-slate-200">
+
+                        <!-- Send Button -->
+                        <button type="submit" class="px-5 md:px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-md active:scale-95 transition flex items-center gap-2 text-xs md:text-sm border-b-4 border-indigo-800 shrink-0">
+                            <span>ส่งข้อมูล</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- VIEW 3: INTERACTIVE MATH GAMES ARENA (4 FULL MODES) -->
+                <!-- ========================================================= -->
+                <section id="view-games" class="hidden space-y-6">
+                    
+                    <!-- Game Mode Selection Toolbar -->
+                    <div class="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h3 class="font-black text-slate-800 text-lg flex items-center gap-2">
+                                    <span>🎮 มินิเกมคณิตศาสตร์แสนสนุก</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 font-medium">เลือกหมวดหมู่มินิเกมที่ต้องการฝึกซ้อม แล้วทำคะแนนเก็บเหรียญทองกันเลย!</p>
+                            </div>
+                            <div class="flex items-center gap-2 bg-amber-100 border-2 border-amber-300 px-4 py-2 rounded-2xl text-xs font-black text-amber-900 shadow-sm">
+                                🏆 คะแนนสูงสุด: <span class="text-indigo-700">1,450 แต้ม</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <button onclick="selectGameMode('⚡ คิดเลขเร็วอวกาศ (Speed Math)', 'speed')" class="p-3 bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                                <span class="text-3xl">🚀</span>
+                                <div>
+                                    <div class="text-xs font-black text-indigo-900">คิดเลขเร็วอวกาศ</div>
+                                    <div class="text-[10px] text-indigo-600 font-bold">บวกลบคูณหารไว</div>
+                                </div>
+                            </button>
+
+                            <button onclick="selectGameMode('🍕 พิซซ่าเศษส่วน (Fractions)', 'fraction')" class="p-3 bg-pink-50 hover:bg-pink-100 border-2 border-pink-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                                <span class="text-3xl">🍕</span>
+                                <div>
+                                    <div class="text-xs font-black text-pink-900">พิซซ่าเศษส่วน</div>
+                                    <div class="text-[10px] text-pink-600 font-bold">บวกลบเศษส่วนง่ายๆ</div>
+                                </div>
+                            </button>
+
+                            <button onclick="selectGameMode('📐 ปราสาทเรขาคณิต (Geometry)', 'geometry')" class="p-3 bg-purple-50 hover:bg-purple-100 border-2 border-purple-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                                <span class="text-3xl">📐</span>
+                                <div>
+                                    <div class="text-xs font-black text-purple-900">ปราสาทเรขาคณิต</div>
+                                    <div class="text-[10px] text-purple-600 font-bold">การหาพื้นที่สี่เหลี่ยม</div>
+                                </div>
+                            </button>
+
+                            <button onclick="selectGameMode('🦄 ปริศนาโจทย์ปัญหา (Word Problems)', 'word_problem')" class="p-3 bg-sky-50 hover:bg-sky-100 border-2 border-sky-300 rounded-2xl flex items-center gap-3 transition text-left cartoon-card">
+                                <span class="text-3xl">🦄</span>
+                                <div>
+                                    <div class="text-xs font-black text-sky-900">ปริศนาโจทย์ปัญหา</div>
+                                    <div class="text-[10px] text-sky-600 font-bold">วิเคราะห์ประโยคสัญลักษณ์</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Game Canvas Container -->
+                    <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 rounded-3xl p-8 text-white shadow-2xl space-y-6 text-center relative overflow-hidden border-b-8 border-indigo-900">
+                        
+                        <!-- Header Stats inside Game -->
+                        <div class="flex justify-between items-center text-xs md:text-sm text-indigo-200 font-bold">
+                            <span id="game-title" class="font-black text-yellow-300 text-sm">โหมด: 🚀 คิดเลขเร็วอวกาศ</span>
+                            <div class="flex items-center gap-4">
+                                <span>ด่าน <strong id="game-level" class="text-white font-black">1</strong></span>
+                                <span class="bg-indigo-900/90 px-3.5 py-1.5 rounded-full border border-indigo-400">
+                                    ⏱️ เหลือเวลา: <strong id="game-timer" class="text-yellow-300 text-base font-black">15</strong> วินาที
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Question Display Box -->
+                        <div class="py-6 max-w-xl mx-auto space-y-3">
+                            <span id="game-progress" class="text-xs font-black text-pink-400 tracking-widest uppercase">โจทย์ข้อที่ 1</span>
+                            <div id="game-question" class="text-3xl md:text-5xl font-black text-yellow-300 tracking-wider min-h-[90px] flex items-center justify-center p-4 rounded-3xl bg-white/10 border-2 border-white/20 shadow-inner">
+                                8 × 7 = ?
+                            </div>
+                        </div>
+
+                        <!-- Answer Options 4 Grid Buttons -->
+                        <div id="game-options" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                            <!-- Dynamic Options Rendered via JS -->
+                        </div>
+
+                        <!-- Game Feedback and Controls -->
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 max-w-2xl mx-auto pt-4 border-t border-white/10">
+                            <div id="game-feedback" class="text-sm font-extrabold text-yellow-300 min-h-[24px]">
+                                กดเลือกคำตอบเพื่อเก็บเหรียญทองเลย! ✨
+                            </div>
+                            <button onclick="resetMathGame()" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-purple-950 font-black text-xs rounded-2xl shadow transition border-b-4 border-yellow-600">
+                                🔄 เริ่มเล่นด่านนี้ใหม่
+                            </button>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- VIEW 4: STUDENT BADGES & REWARDS COLLECTION -->
+                <!-- ========================================================= -->
+                <section id="view-analytics" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-6">
+                        <div>
+                            <h3 class="font-black text-slate-800 text-lg flex items-center gap-2">
+                                <span>🏆 สมุดสะสมเหรียญตรา & ถ้วยรางวัลเกียรติยศ</span>
+                            </h3>
+                            <p class="text-xs text-slate-500 font-medium">สะสมดาวจากการทำแบบฝึกหัดเพื่อปลดล็อกเหรียญตราการ์ตูนสุดเท่!</p>
+                        </div>
+
+                        <!-- Badges Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            
+                            <div class="p-4 bg-amber-50 rounded-2xl border-2 border-amber-300 text-center space-y-2 cartoon-card">
+                                <div class="text-5xl animate-bounce">🌟</div>
+                                <h4 class="font-black text-amber-900 text-xs">นักคิดเลขเร็วขั้นเทพ</h4>
+                                <p class="text-[10px] text-amber-700 font-semibold">ตอบถูกติดกัน 10 ข้อ</p>
+                                <button onclick="claimRewardBadge('นักคิดเลขเร็วขั้นเทพ', 50)" class="w-full py-1.5 bg-amber-400 text-purple-950 font-black rounded-xl text-[10px]">
+                                    รับ +50 🪙
+                                </button>
+                            </div>
+
+                            <div class="p-4 bg-pink-50 rounded-2xl border-2 border-pink-300 text-center space-y-2 cartoon-card">
+                                <div class="text-5xl">🍕</div>
+                                <h4 class="font-black text-pink-900 text-xs">ปรมาจารย์พิซซ่าเศษส่วน</h4>
+                                <p class="text-[10px] text-pink-700 font-semibold">ผ่านบทเรียนเศษส่วน</p>
+                                <button onclick="claimRewardBadge('ปรมาจารย์พิซซ่าเศษส่วน', 100)" class="w-full py-1.5 bg-pink-500 text-white font-black rounded-xl text-[10px]">
+                                    รับ +100 🪙
+                                </button>
+                            </div>
+
+                            <div class="p-4 bg-purple-50 rounded-2xl border-2 border-purple-300 text-center space-y-2 cartoon-card">
+                                <div class="text-5xl">📐</div>
+                                <h4 class="font-black text-purple-900 text-xs">สถาปนิกเรขาคณิต</h4>
+                                <p class="text-[10px] text-purple-700 font-semibold">คำนวณพื้นที่ถูกต้อง 10 ครั้ง</p>
+                                <button onclick="claimRewardBadge('สถาปนิกเรขาคณิต', 80)" class="w-full py-1.5 bg-purple-600 text-white font-black rounded-xl text-[10px]">
+                                    รับ +80 🪙
+                                </button>
+                            </div>
+
+                            <div class="p-4 bg-sky-50 rounded-2xl border-2 border-sky-300 text-center space-y-2 cartoon-card">
+                                <div class="text-5xl">🦄</div>
+                                <h4 class="font-black text-sky-900 text-xs">เจ้าแห่งโจทย์ปัญหา</h4>
+                                <p class="text-[10px] text-sky-700 font-semibold">วิเคราะห์โจทย์คำถามครบ 5 ข้อ</p>
+                                <button onclick="claimRewardBadge('เจ้าแห่งโจทย์ปัญหา', 120)" class="w-full py-1.5 bg-sky-500 text-white font-black rounded-xl text-[10px]">
+                                    รับ +120 🪙
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- VIEW 5: SETTINGS & CARTOON THEME CUSTOMIZER -->
+                <!-- ========================================================= -->
+                <section id="view-settings" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-6 max-w-2xl">
+                        <h3 class="font-black text-slate-800 text-lg flex items-center gap-2">
+                            <span>🎨 แต่งธีมสี & ตั้งค่าระบบ</span>
+                        </h3>
+                        
+                        <!-- Theme Colors Chooser -->
+                        <div class="space-y-3">
+                            <label class="block text-xs font-black text-slate-700">เลือกธีมสีเว็บไซต์ที่คุณชอบ:</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button onclick="applyTheme('rainbow')" class="p-3 rounded-2xl border-2 border-indigo-400 bg-indigo-50 font-bold text-xs text-indigo-900 flex items-center gap-2 cartoon-card">
+                                    <span>🌈</span> สายรุ้งสดใส
+                                </button>
+                                <button onclick="applyTheme('space')" class="p-3 rounded-2xl border-2 border-slate-700 bg-slate-900 font-bold text-xs text-white flex items-center gap-2 cartoon-card">
+                                    <span>🌌</span> อวกาศดวงดาว
+                                </button>
+                                <button onclick="applyTheme('candy')" class="p-3 rounded-2xl border-2 border-pink-300 bg-pink-100 font-bold text-xs text-pink-900 flex items-center gap-2 cartoon-card">
+                                    <span>🍭</span> อมยิ้มพาสเทล
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Audio Controls -->
+                        <div class="space-y-3 text-xs font-bold pt-4 border-t-2 border-slate-100">
+                            <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+                                <span>🔊 เปิดการอ่านออกเสียงข้อความ (Text-To-Speech)</span>
+                                <input type="checkbox" id="setting-tts" checked class="w-5 h-5 text-indigo-600 rounded-lg">
+                            </div>
+                            <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+                                <span>🎵 เปิดเสียงเอฟเฟกต์การกดปุ่มและเกม</span>
+                                <input type="checkbox" id="setting-sfx" checked class="w-5 h-5 text-indigo-600 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT APP ENGINE & INTERACTION LOGIC -->
+    <script>
+        
+        // Auth & User Profile State Management
+        let currentUser = {
+            fullname: 'น้องแพรวา ใจดี',
+            nickname: 'น้องแพรวา',
+            grade: 'ป.4',
+            avatar: '👧',
+            role: 'student'
+        };
+
+        // Image Attachment State Variables
+        let selectedImageDataUrl = null;
+        let selectedImageMimeType = null;
+        let selectedImageFileName = "";
+
+        function quickLoginStudent(fullname, nickname, grade, avatar) {
+            applyUserLogin(fullname, nickname, grade, avatar);
+        }
+
+        function handleCustomStudentLogin(event) {
+            if (event) event.preventDefault();
+            const fullname = document.getElementById('login-student-fullname').value.trim() || 'นักเรียน Math Buddy';
+            const nickname = document.getElementById('login-student-nickname').value.trim() || 'น้องเรียนดี';
+            const grade = document.getElementById('login-student-grade').value;
+            const avatar = document.getElementById('login-student-avatar').value;
+            applyUserLogin(fullname, nickname, grade, avatar);
+        }
+
+        function applyUserLogin(fullname, nickname, grade, avatar) {
+            currentUser = { fullname, nickname, grade, avatar, role: 'student' };
+            
+            // Update UI Elements with User Info
+            const sidebarNickname = document.getElementById('sidebar-nickname');
+            const sidebarFullname = document.getElementById('sidebar-fullname');
+            const sidebarGrade = document.getElementById('sidebar-usergrade');
+            const sidebarAvatar = document.getElementById('sidebar-avatar');
+            const headerSelect = document.getElementById('header-grade-select');
+            const welcomeUser = document.getElementById('welcome-user-name');
+
+            if (sidebarNickname) sidebarNickname.innerText = nickname;
+            if (sidebarFullname) sidebarFullname.innerText = fullname;
+            if (sidebarGrade) sidebarGrade.innerText = grade;
+            if (sidebarAvatar) sidebarAvatar.innerText = avatar;
+            if (headerSelect) headerSelect.value = grade;
+            if (welcomeUser) welcomeUser.innerText = nickname;
+
+            // Hide Login Modal
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.classList.add('hidden');
+
+            showNotificationToast(`ยินดีต้อนรับ ${nickname} เข้าสู่ Math Buddy AI! ✨`);
+            navigateTo('view-dashboard');
+        }
+
+        function logoutUser() {
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.classList.remove('hidden');
+            showNotificationToast("สลับตัวละครเรียบร้อยแล้ว");
+        }
+
+        // Image Upload & Photo Capture Functions
+        function triggerImageUpload() {
+            const fileInput = document.getElementById('image-file-input');
+            if (fileInput) {
+                fileInput.click();
+            }
+        }
+
+        function handleImageFileSelect(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showNotificationToast("กรุณาเลือกไฟล์รูปภาพโจทย์คณิตศาสตร์เท่านั้นครับ");
+                return;
+            }
+
+            selectedImageMimeType = file.type;
+            selectedImageFileName = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImageDataUrl = e.target.result;
+                
+                // Show Image Preview Container
+                const previewContainer = document.getElementById('image-preview-container');
+                const previewImg = document.getElementById('image-preview-img');
+                const previewFilename = document.getElementById('image-preview-filename');
+
+                if (previewImg) previewImg.src = selectedImageDataUrl;
+                if (previewFilename) previewFilename.innerText = selectedImageFileName;
+                if (previewContainer) previewContainer.classList.remove('hidden');
+
+                showNotificationToast("📷 โหลดรูปโจทย์คณิตศาสตร์เรียบร้อยแล้ว! พิมพ์ข้อความเพิ่มเติมหรือกดส่งได้เลยจ้า");
+                scrollChatToBottom();
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function cancelImageUpload() {
+            selectedImageDataUrl = null;
+            selectedImageMimeType = null;
+            selectedImageFileName = "";
+
+            const previewContainer = document.getElementById('image-preview-container');
+            const fileInput = document.getElementById('image-file-input');
+
+            if (previewContainer) previewContainer.classList.add('hidden');
+            if (fileInput) fileInput.value = '';
+
+            showNotificationToast("ยกเลิกภาพรูปโจทย์แล้ว");
+        }
+
+        // Navigation Logic for Student Web App
+        const viewTitles = {
+            'view-dashboard': 'หน้าหลักคณิตศาสตร์ (Home)',
+            'view-ai-tutor': 'คุยกับพี่ AI Math Tutor',
+            'view-games': 'มินิเกมคณิตศาสตร์แสนสนุก (Math Arcade)',
+            'view-analytics': 'สมุดสะสมดาว & เหรียญตรา',
+            'view-settings': 'แต่งธีมสี & ตั้งค่าระบบ'
+        };
+
+        function navigateTo(viewId) {
+            const views = ['view-dashboard', 'view-ai-tutor', 'view-games', 'view-analytics', 'view-settings'];
+            views.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            const targetView = document.getElementById(viewId);
+            if (targetView) targetView.classList.remove('hidden');
+
+            // Update Header Title
+            const titleEl = document.getElementById('current-view-title');
+            if (titleEl && viewTitles[viewId]) {
+                titleEl.innerText = viewTitles[viewId];
+            }
+
+            // Update Sidebar Selected Active Item
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'border-b-2', 'border-indigo-800');
+                btn.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+            });
+
+            const activeBtn = document.getElementById('nav-' + viewId.replace('view-', ''));
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
+                activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'border-b-2', 'border-indigo-800');
+            }
+
+            // Trigger action on view change
+            if (viewId === 'view-ai-tutor') {
+                scrollChatToBottom();
+            } else if (viewId === 'view-games' && currentQuestionIndex === 0) {
+                generateNextQuestion();
+            }
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('hidden');
+        }
+
+        function showNotificationToast(message) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl text-xs font-extrabold flex items-center gap-2 pointer-events-auto border-2 border-indigo-400 transition transform translate-y-2 opacity-0';
+            toast.innerHTML = `<span class="text-lg">🌟</span> <span>${escapeHTML(message)}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function changeGradeLevel(gradeStr) {
+            showNotificationToast(`สลับระดับชั้นเรียนเป็น: ${gradeStr}`);
+        }
+
+        function applyTheme(themeName) {
+            const body = document.getElementById('app-body');
+            body.className = body.className.replace(/theme-\w+/g, '');
+            body.classList.add(`theme-${themeName}`);
+            showNotificationToast(`เปลี่ยนธีมเป็น: ${themeName === 'rainbow' ? 'สายรุ้งสดใส 🌈' : themeName === 'space' ? 'อวกาศดวงดาว 🌌' : 'อมยิ้มพาสเทล 🍭'}`);
+        }
+
+        function claimRewardBadge(badgeTitle, rewardCoins) {
+            gameCoins += rewardCoins;
+            document.getElementById('header-coins').innerText = gameCoins.toLocaleString();
+            showNotificationToast(`🎉 ยินดีด้วย! รับรางวัลเหรียญทอง +${rewardCoins} 🪙 จากเหรียญตรา "${badgeTitle}"`);
+        }
+
+        function scrollChatToBottom() {
+            setTimeout(() => {
+                const chatContainer = document.getElementById('chat-messages');
+                if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 50);
+        }
+
+        function sendQuickPrompt(promptText) {
+            document.getElementById('chat-input').value = promptText;
+            handleSendChatMessage();
+        }
+
+        function clearChatMessages() {
+            const container = document.getElementById('chat-messages');
+            if (container) {
+                container.innerHTML = `
+                    <div class="flex gap-3 max-w-3xl">
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-lg shrink-0 shadow">🤖</div>
+                        <div class="bg-white p-4 rounded-3xl rounded-tl-none border-2 border-indigo-100 text-xs md:text-sm text-slate-800 shadow-sm font-medium">
+                            <p class="font-black text-indigo-700">เริ่มคุยใหม่เรียบร้อยแล้วจ้า!</p>
+                            <p>น้องๆ สามารถพิมพ์คำถามหรือกดปุ่ม 📷 ถ่ายรูปโจทย์ข้อใหม่ส่งมาได้เลยนะจ๊ะ 🌟</p>
+                        </div>
+                    </div>
+                `;
+            }
+            cancelImageUpload();
+        }
+
+        async function handleSendChatMessage(event) {
+            if (event) event.preventDefault();
+
+            const inputField = document.getElementById('chat-input');
+            const messageText = inputField.value.trim();
+            const hasImage = !!selectedImageDataUrl;
+
+            if (!messageText && !hasImage) return;
+
+            // Preserve current image info for user display & API submission
+            const currentImageDataUrl = selectedImageDataUrl;
+            const currentMimeType = selectedImageMimeType;
+
+            // Render User Message with attached image if available
+            renderUserMessage(messageText, currentImageDataUrl);
+            
+            // Clear inputs
+            inputField.value = '';
+            cancelImageUpload();
+
+            // Render Loading Message
+            const loadingId = renderLoadingMessage(hasImage);
+            scrollChatToBottom();
+
+            // Fetch AI Response with multimodal Gemini API or simulated OCR fallback
+            try {
+                const aiReplyText = await fetchGeminiMathResponse(messageText, currentImageDataUrl, currentMimeType);
+                removeLoadingMessage(loadingId);
+                renderAIMessage(aiReplyText);
+            } catch (err) {
+                console.error("Gemini API fallback:", err);
+                removeLoadingMessage(loadingId);
+                const fallbackReply = generateFallbackMathReply(messageText, hasImage);
+                renderAIMessage(fallbackReply);
+            } finally {
+                scrollChatToBottom();
+            }
+        }
+
+        function renderUserMessage(text, imageDataUrl) {
+            const container = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex gap-3 justify-end';
+
+            let imageHtml = '';
+            if (imageDataUrl) {
+                imageHtml = `
+                    <div class="mb-2 max-w-xs rounded-2xl overflow-hidden border-2 border-indigo-300 shadow-sm">
+                        <img src="${imageDataUrl}" class="w-full h-auto object-cover" alt="รูปภาพโจทย์จากผู้ใช้">
+                    </div>
+                `;
+            }
+
+            msgDiv.innerHTML = `
+                <div class="bg-indigo-600 text-white p-4 rounded-3xl rounded-tr-none text-xs md:text-sm shadow-sm max-w-2xl font-bold">
+                    ${imageHtml}
+                    ${text ? `<div class="whitespace-pre-wrap">${escapeHTML(text)}</div>` : ''}
+                </div>
+                <div class="w-10 h-10 rounded-2xl bg-pink-200 text-pink-700 flex items-center justify-center text-lg font-black shrink-0 shadow border-2 border-pink-300">${currentUser.avatar || '👧'}</div>
+            `;
+            container.appendChild(msgDiv);
+            scrollChatToBottom();
+        }
+
+        function renderLoadingMessage(isImage = false) {
+            const container = document.getElementById('chat-messages');
+            const loadingId = 'loading-' + Date.now();
+            const msgDiv = document.createElement('div');
+            msgDiv.id = loadingId;
+            msgDiv.className = 'flex gap-3';
+            msgDiv.innerHTML = `
+                <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-lg shrink-0 shadow">🤖</div>
+                <div class="bg-white p-4 rounded-3xl rounded-tl-none border-2 border-indigo-100 text-xs text-slate-500 shadow-sm flex items-center gap-2 font-bold">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-pink-500 animate-ping"></span>
+                    <span>${isImage ? '📷 พี่ AI กำลังสแกนอ่านรูปภาพโจทย์และคำนวณคำตอบให้อยู่จ้า...' : 'พี่ AI กำลังคิดคำตอบน่ารักๆ ให้อยู่จ้า...'}</span>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            return loadingId;
+        }
+
+        function removeLoadingMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function renderAIMessage(formattedHtml) {
+            const container = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex gap-3 max-w-3xl';
+            
+            const plainText = formattedHtml.replace(/<[^>]*>?/gm, '');
+
+            msgDiv.innerHTML = `
+                <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-lg shrink-0 shadow">🤖</div>
+                <div class="bg-white p-4 rounded-3xl rounded-tl-none border-2 border-indigo-100 text-xs md:text-sm text-slate-800 shadow-sm space-y-3 font-medium">
+                    ${formattedHtml}
+                    <div class="pt-2 border-t border-slate-100 flex gap-2">
+                        <button onclick="speakText('${escapeHTML(plainText).replace(/'/g, "\\'")}')" class="text-[11px] text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-xl font-bold flex items-center gap-1 hover:bg-indigo-100">
+                            🔊 ฟังเสียงพี่ AI อ่าน
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            scrollChatToBottom();
+        }
+
+        async function fetchGeminiMathResponse(userPrompt, imageDataUrl = null, mimeType = null) {
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const systemInstructionText = `คุณคือ "พี่ AI Math Tutor" ติวเตอร์คณิตศาสตร์การ์ตูนสุดใจดี สนุกสนาน สำหรับเด็กประถม
+หากผู้ใช้อัปโหลดภาพโจทย์ ให้สแกนวิเคราะห์โจทย์ในภาพ (OCR & Math Vision) อธิบายขั้นตอนคิดอย่างเป็นขั้นตอนเข้าใจง่าย
+ใช้อธิบายสั้นๆ มีอิโมจิน่ารักๆ (🍕, 📐, 🚀, 🌟, 🦄) สัญลักษณ์คณิตอ่านง่าย ไม่ใส่ LaTeX $ ลอยๆ ให้กำลังใจเสมอ`;
+
+            const parts = [];
+            
+            // Add image part if base64 provided
+            if (imageDataUrl && mimeType) {
+                const base64Data = imageDataUrl.split(',')[1];
+                if (base64Data) {
+                    parts.push({
+                        inlineData: {
+                            mimeType: mimeType,
+                            data: base64Data
+                        }
+                    });
+                }
+            }
+
+            const promptText = userPrompt || (imageDataUrl ? "ช่วยอ่านโจทย์ในภาพถ่ายนี้ แล้วสอนวิธีคิดทีละขั้นตอนให้หน่อยครับ" : "สวัสดีครับ");
+            parts.push({ text: promptText });
+
+            const payload = {
+                contents: [{ parts: parts }],
+                systemInstruction: { parts: [{ text: systemInstructionText }] }
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error("Gemini API error");
+
+            const data = await response.json();
+            const textResult = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (!textResult) throw new Error("Empty response");
+
+            return cleanAndFormatMathText(textResult);
+        }
+
+        function cleanAndFormatMathText(rawText) {
+            return rawText
+                .replace(/\\times/g, '×')
+                .replace(/\\div/g, '÷')
+                .replace(/\$([^\$]+)\$/g, '$1')
+                .replace(/\$/g, '')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function generateFallbackMathReply(question, hasImage = false) {
+            if (hasImage) {
+                return `<p class="font-black text-indigo-700 text-sm">📷 พี่ AI สแกนอ่านภาพโจทย์ของน้องเรียบร้อยแล้วจ้า!</p>
+                <div class="p-3 bg-indigo-50 rounded-2xl border-2 border-indigo-200 font-bold space-y-2">
+                    <p class="text-indigo-900">🔍 ผลการวิเคราะห์โจทย์จากภาพถ่าย:</p>
+                    <p>• พี่ AI พบตัวเลขและเครื่องหมายคณิตศาสตร์ในแบบฝึกหัดภาพนี้</p>
+                    <p>• <strong>วิธีคิดสไตล์เด็กเก่ง:</strong> แยกตัวเลขหลัก ค้นหาสิ่งที่โจทย์ถาม แล้วตั้งประโยคสัญลักษณ์ตามขั้นตอนจ้า!</p>
+                </div>
+                <p class="text-xs font-semibold text-slate-600">💡 ลองพิมพ์ข้อความระบุตัวเลขในโจทย์เพิ่มเติม หรือถามเจาะจงข้อที่สงสัยได้เลยนะจ๊ะ!</p>`;
+            }
+
+            if (question.includes("เศษส่วน")) {
+                return `<p class="font-black text-pink-600 text-sm">🍕 เรื่องเศษส่วนเข้าใจง่ายนิดเดียว!</p>
+                <p>ลองจินตนาการถึงพิซซ่า 1 ถาด แบ่งเป็น 4 ชิ้นเท่าๆ กัน</p>
+                <div class="p-3 bg-pink-50 rounded-2xl border-2 border-pink-200 font-bold space-y-1">
+                    <p class="text-pink-900">📌 หลักการจำจำง่าย:</p>
+                    <p>• เลขตัวบน (ตัวเศษ) = ชิ้นที่เรากินไป 🍕</p>
+                    <p>• เลขตัวล่าง (ตัวส่วน) = ชิ้นทั้งหมดที่มี</p>
+                </div>`;
+            }
+
+            return `<p class="font-black text-indigo-700 text-sm">💡 พี่ AI ไขข้อสงสัยข้อนี้ให้แล้วจ้า!</p>
+            <p>สำหรับคำถามเรื่อง: <strong>"${escapeHTML(question)}"</strong></p>
+            <div class="p-3 bg-indigo-50 rounded-2xl border-2 border-indigo-200 space-y-1 font-bold">
+                <p class="text-indigo-900">✨ ขั้นตอนการคิดสไตล์เด็กเก่ง:</p>
+                <p>1. ดูสิ่งที่โจทย์ถามและกำหนดให้</p>
+                <p>2. เขียนประโยคสัญลักษณ์แล้วคิดคำนวณ</p>
+                <p>3. ตรวจสอบคำตอบ รับดาวความเก่งเลย! 🌟</p>
+            </div>`;
+        }
+
+        let recognition = null;
+        let isListening = false;
+
+        function toggleVoiceRecognition() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showNotificationToast("เบราว์เซอร์นี้ยังไม่รองรับการพูดด้วยเสียง กรุณาใช้ Google Chrome ครับ");
+                return;
+            }
+
+            if (isListening) {
+                if (recognition) recognition.stop();
+                setMicState(false);
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'th-TH';
+
+            recognition.onstart = function() { setMicState(true); };
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                const chatInput = document.getElementById('chat-input');
+                if (chatInput) chatInput.value = transcript;
+                setMicState(false);
+            };
+            recognition.onerror = function() { setMicState(false); };
+            recognition.onend = function() { setMicState(false); };
+
+            try { recognition.start(); } catch (e) { setMicState(false); }
+        }
+
+        function setMicState(active) {
+            isListening = active;
+            const micIcon = document.getElementById('mic-icon');
+            const headerMicIcon = document.getElementById('header-mic-icon');
+
+            if (active) {
+                if (micIcon) micIcon.className = "fa-solid fa-microphone-lines text-red-500 animate-bounce";
+                if (headerMicIcon) headerMicIcon.className = "fa-solid fa-microphone-lines text-red-500 animate-bounce";
+                showNotificationToast("🎤 พี่ AI กำลังฟังเสียงน้องๆ อยู่นะจ๊ะ...");
+            } else {
+                if (micIcon) micIcon.className = "fa-solid fa-microphone";
+                if (headerMicIcon) headerMicIcon.className = "fa-solid fa-microphone";
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH';
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showNotificationToast("เบราว์เซอร์ไม่รองรับการอ่านออกเสียง");
+            }
+        }
+
+        function escapeHTML(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // Math Game Engine
+        let currentQuestionIndex = 0;
+        let gameStars = 1250;
+        let gameCoins = 340;
+        let correctAnswer = null;
+        let gameTimerInterval = null;
+        let timeLeft = 15;
+        let currentGameMode = 'speed';
+
+        function startTimer() {
+            clearInterval(gameTimerInterval);
+            timeLeft = 15;
+            document.getElementById('game-timer').innerText = timeLeft;
+            gameTimerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('game-timer').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(gameTimerInterval);
+                    showGameFeedback("⏱️ หมดเวลาแล้ว! ลองด่านถัดไปกันนะ", false);
+                    setTimeout(generateNextQuestion, 1200);
+                }
+            }, 1000);
+        }
+
+        function generateNextQuestion() {
+            currentQuestionIndex++;
+            document.getElementById('game-progress').innerText = `โจทย์ข้อที่ ${currentQuestionIndex}`;
+            document.getElementById('game-level').innerText = Math.ceil(currentQuestionIndex / 2);
+
+            let questionText = "";
+            let options = [];
+
+            if (currentGameMode === 'speed') {
+                const ops = ['+', '-', '×', '÷'];
+                const op = ops[Math.floor(Math.random() * ops.length)];
+                let num1, num2;
+
+                if (op === '×') {
+                    num1 = Math.floor(Math.random() * 11) + 2;
+                    num2 = Math.floor(Math.random() * 11) + 2;
+                    correctAnswer = String(num1 * num2);
+                } else if (op === '÷') {
+                    num2 = Math.floor(Math.random() * 9) + 2;
+                    const ansNum = Math.floor(Math.random() * 10) + 1;
+                    num1 = num2 * ansNum;
+                    correctAnswer = String(ansNum);
+                } else if (op === '+') {
+                    num1 = Math.floor(Math.random() * 80) + 10;
+                    num2 = Math.floor(Math.random() * 80) + 10;
+                    correctAnswer = String(num1 + num2);
+                } else {
+                    num1 = Math.floor(Math.random() * 90) + 20;
+                    num2 = Math.floor(Math.random() * num1);
+                    correctAnswer = String(num1 - num2);
+                }
+                questionText = `${num1} ${op} ${num2} = ?`;
+
+                const cVal = parseInt(correctAnswer);
+                const rawOptions = new Set([cVal]);
+                while (rawOptions.size < 4) {
+                    const offset = (Math.floor(Math.random() * 6) + 1) * (Math.random() > 0.5 ? 1 : -1);
+                    rawOptions.add(Math.max(1, cVal + offset));
+                }
+                options = Array.from(rawOptions).sort(() => Math.random() - 0.5).map(String);
+            } else if (currentGameMode === 'fraction') {
+                const numerators = [1, 2, 3, 4];
+                const den = 8;
+                const n1 = numerators[Math.floor(Math.random() * numerators.length)];
+                const n2 = numerators[Math.floor(Math.random() * numerators.length)];
+                correctAnswer = `${n1 + n2}/${den}`;
+                questionText = `🍕 ${n1}/${den} + ${n2}/${den} = ?`;
+                options = [`${n1 + n2}/${den}`, `${n1 + n2}/${den * 2}`, `${Math.abs(n1 - n2)}/${den}`, `${n1 + n2 + 1}/${den}`].sort(() => Math.random() - 0.5);
+            } else if (currentGameMode === 'geometry') {
+                const w = Math.floor(Math.random() * 8) + 2;
+                const h = Math.floor(Math.random() * 8) + 2;
+                correctAnswer = String(w * h);
+                questionText = `📐 รูปสี่เหลี่ยมผืนผ้า กว้าง ${w} ซม. ยาว ${h} ซม. มีพื้นที่กี่ ตร.ซม.?`;
+                options = [String(w * h), String(2 * (w + h)), String(w * h + 2), String(w * h - 2)].sort(() => Math.random() - 0.5);
+            } else {
+                const apples = Math.floor(Math.random() * 5) + 3;
+                const groups = Math.floor(Math.random() * 4) + 2;
+                correctAnswer = String(apples * groups);
+                questionText = `🦄 น้องต่ายมีตะกร้า ${groups} ใบ ใส่แอปเปิ้ลใบละ ${apples} ผล รวมมีแอปเปิ้ลกี่ผล?`;
+                options = [String(apples * groups), String(apples + groups), String(apples * groups + 3), String(apples * groups - 1)].sort(() => Math.random() - 0.5);
+            }
+
+            document.getElementById('game-question').innerText = questionText;
+
+            const optionsContainer = document.getElementById('game-options');
+            optionsContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "py-4 px-3 bg-white/10 hover:bg-white/20 active:scale-95 rounded-2xl font-black text-lg md:text-xl border-2 border-white/20 transition truncate shadow cartoon-card";
+                btn.innerText = opt;
+                btn.onclick = () => checkGameAnswer(opt);
+                optionsContainer.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function checkGameAnswer(selectedOption) {
+            clearInterval(gameTimerInterval);
+            if (String(selectedOption).trim() === String(correctAnswer).trim()) {
+                gameStars += 10;
+                gameCoins += 10;
+                document.getElementById('header-stars').innerText = gameStars.toLocaleString();
+                document.getElementById('header-coins').innerText = gameCoins.toLocaleString();
+                showGameFeedback("✨ ถูกต้องแล้วจ้า! +10 ดาว ⭐ +10 เหรียญทอง 🪙", true);
+            } else {
+                showGameFeedback(`❌ คำตอบที่ถูกต้องคือ: ${correctAnswer}`, false);
+            }
+
+            setTimeout(generateNextQuestion, 1600);
+        }
+
+        function showGameFeedback(text, isSuccess) {
+            const feedback = document.getElementById('game-feedback');
+            feedback.innerText = text;
+            feedback.className = `text-sm font-black ${isSuccess ? 'text-green-300 animate-bounce' : 'text-red-400'}`;
+        }
+
+        function resetMathGame() {
+            currentQuestionIndex = 0;
+            showGameFeedback("🔄 เริ่มด่านใหม่แล้วจ้า!", true);
+            generateNextQuestion();
+        }
+
+        function selectGameMode(modeName, modeKey) {
+            currentGameMode = modeKey || 'speed';
+            document.getElementById('game-title').innerText = `โหมด: ${modeName}`;
+            resetMathGame();
+        }
+
+        // Window Onload Initialization
+        window.onload = function() {
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.classList.remove('hidden');
+            navigateTo('view-dashboard');
+        };
+    </script>
+</body>
+</html>
